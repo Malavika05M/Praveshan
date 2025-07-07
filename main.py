@@ -187,7 +187,7 @@ async def lyrics_command(ctx, *, query):
             artist = track_info['artist']
             title = track_info['title']
         else:
-            await ctx.send("❌ Please specify both song and artist (e.g., `/lyrics Hello - Adele`)")
+            await ctx.send("Please specify both song and artist (e.g., `/lyrics Hello - Adele`)")
             return
     
     artist = artist.split(' ft.')[0].split(' feat.')[0].strip()
@@ -197,7 +197,7 @@ async def lyrics_command(ctx, *, query):
     
     lyrics = await music_api.get_lyrics(artist, title)
     if not lyrics:
-        await ctx.send(f"❌ Couldn't find lyrics for {title} by {artist}")
+        await ctx.send(f"Couldn't find lyrics for {title} by {artist}")
         return
     
     chunks = [lyrics[i:i+1900] for i in range(0, min(len(lyrics), 5700), 1900)] 
@@ -213,14 +213,14 @@ async def track_info(ctx, *, query):
     artist = parts[1].strip() if len(parts) > 1 else None
     
     if not artist:
-        await ctx.send("❌ Please specify both song and artist (e.g. `/track Hello - Adele`)")
+        await ctx.send("Please specify both song and artist (e.g. `/track Hello - Adele`)")
         return
     
     await ctx.send(f"Searching for {title} by {artist}...")
     
     track_info = await music_api.search_track(artist, title)
     if not track_info:
-        await ctx.send("❌ Couldn't find track information")
+        await ctx.send("Couldn't find track information")
         return
     
     embed = discord.Embed(
@@ -248,7 +248,7 @@ async def trending_command(ctx):
     
     trending = await music_api.get_trending()
     if not trending:
-        await ctx.send("❌ Couldn't fetch trending tracks at the moment.")
+        await ctx.send("Couldn't fetch trending tracks at the moment.")
         return
     
     embed = discord.Embed(
@@ -275,7 +275,7 @@ async def recommend_command(ctx, *, genre):
     
     recommendations = await music_api.get_recommendations(genre.lower())
     if not recommendations:
-        await ctx.send(f"❌ No recommendations found for {genre}. Try pop, rock, hiphop, etc.")
+        await ctx.send(f"No recommendations found for {genre}. Try pop, rock, hiphop, etc.")
         return
     
     embed = discord.Embed(
@@ -295,7 +295,7 @@ async def mood_command(ctx, *, mood):
     mood_songs = await music_api.get_mood_songs(mood.lower())
     if not mood_songs:
         common_moods = ["happy", "sad", "chill", "energetic", "romantic"]
-        await ctx.send(f"❌ No songs found for {mood}. Try: {', '.join(common_moods)}")
+        await ctx.send(f"No songs found for {mood}. Try: {', '.join(common_moods)}")
         return
     
     embed = discord.Embed(
@@ -317,14 +317,14 @@ async def playlist_command(ctx, action=None, *, song=None):
     
     if action == 'add' and song:
         playlists[user_id].append(song)
-        await ctx.send(f"✅ Added '{song}' to your playlist!")
+        await ctx.send(f"Added '{song}' to your playlist!")
         
     elif action == 'remove' and song:
         if song in playlists[user_id]:
             playlists[user_id].remove(song)
-            await ctx.send(f"✅ Removed '{song}' from your playlist!")
+            await ctx.send(f"Removed '{song}' from your playlist!")
         else:
-            await ctx.send(f"❌ '{song}' not found in your playlist!")
+            await ctx.send(f"'{song}' not found in your playlist!")
             
     elif action == 'clear':
         playlists[user_id] = []
@@ -355,11 +355,11 @@ async def playlist_command(ctx, action=None, *, song=None):
 @bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
-        await ctx.send("❌ Command not found! Use `/help` to see available commands.")
+        await ctx.send("Command not found! Use `/help` to see available commands.")
     elif isinstance(error, commands.MissingRequiredArgument):
-        await ctx.send("❌ Missing required argument! Check `/help` for command usage.")
+        await ctx.send("Missing required argument! Check `/help` for command usage.")
     else:
-        await ctx.send(f"❌ An error occurred: {str(error)}")
+        await ctx.send(f"An error occurred: {str(error)}")
 
 
 @bot.event
@@ -370,6 +370,6 @@ async def on_disconnect():
 if __name__ == "__main__":
     TOKEN = os.getenv('DISCORD_BOT_TOKEN')
     if not TOKEN:
-        logger.error("❌ Error: DISCORD_BOT_TOKEN not found in .env file!")
+        logger.error("Error: DISCORD_BOT_TOKEN not found in .env file!")
     else:
         bot.run(TOKEN)
